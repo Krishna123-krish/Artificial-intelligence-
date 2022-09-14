@@ -1,0 +1,141 @@
+
+    def __init__(self, edges, n):
+        self.adjList = [[] for _ in range(n)]
+ 
+        # add edges to the undirected graph
+        for (src, dest) in edges:
+            self.adjList[src].append(dest)
+            self.adjList[dest].append(src)
+ 
+ 
+# Function to assign colors to vertices of a graph
+def colorGraph(graph, n):
+ 
+    # keep track of the color assigned to each vertex
+    result = {}
+ 
+    # assign a color to vertex one by one
+    for u in range(n):
+ 
+        # check colors of adjacent vertices of `u` and store them in a set
+        assigned = set([result.get(i) for i in graph.adjList[u] if i in result])
+ 
+        # check for the first free color
+        color = 1
+        for c in assigned:
+            if color != c:
+                break
+            color = color + 1
+ 
+        # assign vertex `u` the first available color
+        result[u] = color
+ 
+    for v in range(n):
+        print(f'Color assigned to vertex {v} is {colors[result[v]]}')
+ 
+ 
+# Greedy coloring of a graph
+if __name__ == '__main__':
+ 
+    # Add more colors for graphs with many more vertices
+    colors = ['', 'BLUE', 'GREEN', 'RED', 'YELLOW', 'ORANGE', 'PINK',
+            'BLACK', 'BROWN', 'WHITE', 'PURPLE', 'VOILET']
+ 
+    # List of graph edges as per the above diagram
+    edges = [(0, 1), (0, 4), (0, 5), (4, 5), (1, 4), (1, 3), (2, 3), (2, 4)]
+ 
+    # total number of nodes in the graph (labelled from 0 to 5)
+    n = 6
+ 
+    # build a graph from the given edges
+    graph = Graph(edges, n)
+ 
+    # color graph using the greedy algorithm
+    colorGraph(graph, n)
+[9/14, 10:11 AM] Sai Dhanush: from queue import PriorityQueue
+ 
+#Creating Base Class
+class State(object):
+    def __init__(self, value, parent, start = 0, goal = 0):
+        self.children = []
+        self.parent = parent
+        self.value = value
+        self.dist = 0
+        if parent:
+            self.start = parent.start
+            self.goal = parent.goal
+            self.path = parent.path[:]
+            self.path.append(value)
+ 
+        else:
+            self.path = [value]
+            self.start = start
+            self.goal = goal
+ 
+    def GetDistance(self):
+        pass
+    def CreateChildren(self):
+        pass
+ 
+ 
+# Creating subclass
+class State_String(State):
+    def __init__(self, value, parent, start = 0, goal = 0 ):
+        super(State_String, self).__init__(value, parent, start, goal)
+        self.dist = self.GetDistance()
+ 
+    def GetDistance(self):
+            if self.value == self.goal:
+                return 0
+            dist = 0
+            for i in range(len(self.goal)):
+                letter = self.goal[i]
+                dist += abs(i - self.value.index(letter))
+            return dist
+ 
+    def CreateChildren(self):
+            if not self.children:
+                for i in range(len(self.goal)-1):
+                    val = self.value
+                    val = val[:i] + val[i+1] + val[i] + val[i+2:]
+                    child = State_String(val, self)
+                    self.children.append(child)
+ 
+# Creating a class that hold the final magic
+class A_Star_Solver:
+    def __init__(self, start, goal):
+        self.path = []
+        self.vistedQueue =[]
+        self.priorityQueue = PriorityQueue()
+        self.start = start
+        self.goal = goal
+ 
+    def Solve(self):
+        startState = State_String(self.start,0,self.start,self.goal)
+ 
+        count = 0
+        self.priorityQueue.put((0,count, startState))
+        while(not self.path and self.priorityQueue.qsize()):
+               closesetChild = self.priorityQueue.get()[2]
+               closesetChild.CreateChildren()
+               self.vistedQueue.append(closesetChild.value)
+               for child in closesetChild.children:
+                   if child.value not in self.vistedQueue:
+                    count += 1
+                    if not child.dist:
+                       self.path = child.path
+                       break
+                    self.priorityQueue.put((child.dist,count,child))
+        if not self.path:
+            print("Goal Of  is not possible !" + self.goal )
+        return self.path
+ 
+# Calling all the existing stuffs
+if __name__ == "__main__":
+    start1 = "hema"
+    goal1 = "mahe"
+    print("Starting....")
+    a = A_Star_Solver(start1,goal1)
+    a.Solve()
+    for i in range(len(a.path)):
+        print("{0}){1}".format(i,a.path[i]))
