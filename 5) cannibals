@@ -1,0 +1,93 @@
+print("\n")
+print("\tgame start\nnow the task is to move all of them to right side of the river")
+print("rules:\n1. the boat can carry at most two people\n2. if cannibals num greater then missionaries then the cannibals would eat the missionaries\n3. the boat cannot cross the river by itself with no people on board")
+lm = 3            #lm = left side missionaries number
+lc = 3            #lc = laft side cannibals number
+rm=0            #rm = right side missionaries number
+rc=0            #rc = right side cannibals number
+userm = 0        #userm = user input for number of missionaries for right to left side travel
+userc = 0        #userc = user input for number of cannibals for right to left travel 
+k = 0
+print("\nm m m c c c |     --- | \n")
+try:
+    while(true):
+        while(true):
+            print("left side -> right side river travel")
+            #um = user input for number of missionaries for left to right travel
+            #uc = user input for  number of cannibals for left to right travel
+            um = int(input("enter number of missionaries travel => "))   
+            uc = int(input("enter number of cannibals travel => "))
+ 
+            if((um==0)and(uc==0)):
+                print("empty travel not possible")
+                print("re-enter : ")
+            elif(((um+uc) <= 2)and((lm-um)>=0)and((lc-uc)>=0)):
+                break
+            else:
+                print("wrong input re-enter : ")
+        lm = (lm-um)
+        lc = (lc-uc)
+        rm += um
+        rc += uc
+ 
+        print("\n")
+        for i in range(0,lm):
+            print("m ",end="")
+        for i in range(0,lc):
+            print("c ",end="")
+        print("| --> | ",end="")
+        for i in range(0,rm):
+            print("m ",end="")
+        for i in range(0,rc):
+            print("c ",end="")
+        print("\n")
+ 
+        k +=1
+ 
+        if(((lc==3)and (lm == 1))or((lc==3)and(lm==2))or((lc==2)and(lm==1))or((rc==3)and (rm == 1))or((rc==3)and(rm==2))or((rc==2)and(rm==1))):
+            print("cannibals eat missionaries:\nyou lost the game")
+ 
+            break
+ 
+        if((rm+rc) == 6):
+            print("you won the game : \n\tcongrats")
+            print("total attempt")
+            print(k)
+            break
+        while(true):
+            print("right side -> left side river travel")
+            userm = int(input("enter number of missionaries travel => "))
+            userc = int(input("enter number of cannibals travel => "))
+             
+            if((userm==0)and(userc==0)):
+                    print("empty travel not possible")
+                    print("re-enter : ")
+            elif(((userm+userc) <= 2)and((rm-userm)>=0)and((rc-userc)>=0)):
+                break
+            else:
+                print("wrong input re-enter : ")
+        lm += userm
+        lc += userc
+        rm -= userm
+        rc -= userc
+ 
+        k +=1
+        print("\n")
+        for i in range(0,lm):
+            print("m ",end="")
+        for i in range(0,lc):
+            print("c ",end="")
+        print("| <-- | ",end="")
+        for i in range(0,rm):
+            print("m ",end="")
+        for i in range(0,rc):
+            print("c ",end="")
+        print("\n")
+ 
+     
+ 
+        if(((lc==3)and (lm == 1))or((lc==3)and(lm==2))or((lc==2)and(lm==1))or((rc==3)and (rm == 1))or((rc==3)and(rm==2))or((rc==2)and(rm==1))):
+            print("cannibals eat missionaries:\nyou lost the game")
+            break
+except eoferror as e:
+    print("\ninvalid input please retry !!") 
